@@ -2,6 +2,8 @@ package com.sachi.listpractice;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +27,8 @@ public class CustomListAdapter extends ArrayAdapter {
         this.context = context;
         this.devlopers = devlopers;
     }
-
+    TextView txtname;
+    TextView txtdegn;
 
 
     @NonNull
@@ -34,12 +37,33 @@ public class CustomListAdapter extends ArrayAdapter {
         LayoutInflater layoutInflater = context.getLayoutInflater();
         MainActivity.Devloper devloper = (MainActivity.Devloper) getItem(position);
         View rowview = layoutInflater.inflate(R.layout.customelistview , null,true);
-        TextView txtname = rowview.findViewById(R.id.txtName);
-        TextView txtdegn = rowview.findViewById(R.id.txtDegn);
+        txtname = rowview.findViewById(R.id.txtName);
+        txtdegn = rowview.findViewById(R.id.txtDegn);
+
+        rowview.findViewById(R.id.deleteUser).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                devlopers.remove(position);
+                notifyDataSetChanged();
+            }
+        });
+
+        rowview.findViewById(R.id.editUser).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(context,addUser.class);
+                i.putExtra("nameDev",devloper.name);
+                i.putExtra("posDev",devloper.degn);
+                i.putExtra("btnName","Update");
+                context.startActivity(i);
+
+            }
+        });
 
 
 
         txtname.setText(devloper.name);
+        Log.d("devname",devloper.name);
         txtdegn.setText(devloper.degn);
         return  rowview;
     }
